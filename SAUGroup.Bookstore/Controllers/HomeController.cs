@@ -1,37 +1,84 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Stajilan.Models;
+using SAUGroup.Bookstore.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using SAUGroup.Bookstore.Repository;
+using SAUGroup.Bookstore.Service;
 
-namespace Stajilan.Controllers
+namespace SAUGroup.Bookstore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly NewBookAlertConfig _newBookAlertconfiguration;
+        private readonly NewBookAlertConfig _newThirdParyBookAlertconfiguration;
+        private readonly IMessageRepository _messageRepository;
+        private readonly IUserService _userService;
+      //  private readonly IEmailService _emailService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IOptionsSnapshot<NewBookAlertConfig> newBookAlertconfiguration, 
+            IMessageRepository messageRepository,
+            IUserService userService)
+        //    IEmailService emailService)
         {
-            _logger = logger;
+            _newBookAlertconfiguration = newBookAlertconfiguration.Get("InternalBooks");
+            _newThirdParyBookAlertconfiguration = newBookAlertconfiguration.Get("ThirdPartyBooks");
+            _messageRepository = messageRepository;
+            _userService = userService;
+          //  _emailService = emailService;
         }
 
-        public IActionResult Index()
+        [Route("")]
+        //public async Task<ViewResult> Index()
+        public ViewResult Index()
+        {
+
+            /* UserEmailOptions options = new UserEmailOptions
+            {
+                ToEmails = new List<string>() { "test@gmail.com" }
+            };
+
+            await _emailService.SendTestEmail(options); */
+
+            //var userId = _userService.GetUserId();
+            //var isLoggedIn = _userService.IsAuthenticated();
+
+            //var newBookAlert = new NewBookAlertConfig();
+            //_newBookAlertconfiguration.Bind("NewBookAlert", newBookAlert);
+
+            //bool isDisplay = _newBookAlertconfiguration.DisplayNewBookAlert;
+            //string display = _newBookAlertconfiguration.BookName;
+            //bool isDisplay1 = _newThirdParyBookAlertconfiguration.DisplayNewBookAlert;
+            //string display1 = _newThirdParyBookAlertconfiguration.BookName;
+
+            // var value = _messageRepository.GetName();
+
+            //var newBook = _configuration.GetSection("NewBookAlert");
+
+            //var result = newBook.GetValue<bool>("DisplayNewBookAlert");
+            //var bookName = newBook.GetValue<string>("BookName");
+
+            //var result1 = _configuration["DisplayNewBookAlert"];
+            //var result = _configuration["AppName"];
+            //var key1 = _configuration["infoObj:key1"];
+            //var key2 = _configuration["infoObj:key2"];
+            //var key3 = _configuration["infoObj:key3:key3obj1"];
+            return View();
+        }
+
+        [Route("about-us")]
+        public ViewResult AboutUs()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        [Route("contact-us")]
+        public ViewResult ContactUs()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
